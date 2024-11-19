@@ -7,13 +7,13 @@ import { storage } from "./filestorage";
  * It provides an abstraction for user-related operations such as saving and serializing to JSON.
  */
 interface UserInterface {
-  id: string;
   username: string;
-  numberOfPosts: number;
+  borrowedBooksCount?: number;
+  numberOfPosts?: number;
+  id?: string;
   created_at?: Date | string;
-  updated_at: Date | string;
-  borrowedBooksCount: number;
-  borrowedBooks: string[];
+  updated_at?: Date | string;
+  borrowedBooks?: string[];
 
   /**
    * Converts the user object to a dictionary.
@@ -28,18 +28,11 @@ interface UserInterface {
 }
 
 /**
- * UserConstructorArgs - Defines the argument structure for constructing a user object.
- * Used to instantiate a new User object with the appropriate properties.
+ * UserConstructorArgs - A type derived from UserInterface using `Omit` to exclude the "save" and "to_dict" methods.
+ * This ensures the constructor arguments include only the properties needed to instantiate a User object,
+ * keeping the code consistent and reducing redundancy.
  */
-type UserConstructorArgs = {
-  username: string;
-  borrowedBooksCount?: number;
-  numberOfPosts?: number;
-  id?: string;
-  created_at?: Date | string;
-  updated_at?: Date | string;
-  borrowedBooks?: string[];
-};
+type UserConstructorArgs = Omit<UserInterface, "save" | "to_dict">;
 
 /**
  * User class - Represents a user and implements the UserInterface.
@@ -121,7 +114,7 @@ const user2 = new User({
 });
 
 user1.save();
-user2.save()
+user2.save();
 
 // exports
 export { User, UserInterface, UserConstructorArgs };

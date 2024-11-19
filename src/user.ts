@@ -1,5 +1,11 @@
+// Import statements should typically be placed at the top of the file
 import { v4 as uuid4 } from "uuid";
+import { storage } from "./filestorage";
 
+/**
+ * User Interface - Defines the structure of a user object and its required methods.
+ * It provides an abstraction for user-related operations such as saving and serializing to JSON.
+ */
 interface UserInterface {
   id: string;
   username: string;
@@ -9,10 +15,22 @@ interface UserInterface {
   borrowedBooksCount: number;
   borrowedBooks: string[];
 
-  to_dict(): string;
+  /**
+   * Converts the user object to a dictionary.
+   * @returns A record containing user details in a key-value format.
+   */
+  to_dict(): Record<string, UserConstructorArgs>;
 
+  /**
+   * Saves the user object to a storage system (file/database).
+   */
+  save(): void;
 }
 
+/**
+ * UserConstructorArgs - Defines the argument structure for constructing a user object.
+ * Used to instantiate a new User object with the appropriate properties.
+ */
 type UserConstructorArgs = {
   username: string;
   borrowedBooksCount?: number;
@@ -23,6 +41,10 @@ type UserConstructorArgs = {
   borrowedBooks?: string[];
 };
 
+/**
+ * User class - Represents a user and implements the UserInterface.
+ * This class handles user creation, serialization, and saving to a storage system.
+ */
 class User implements UserInterface {
   public id: string;
   public username: string;
@@ -32,6 +54,10 @@ class User implements UserInterface {
   public borrowedBooksCount: number;
   public borrowedBooks: string[];
 
+  /**
+   * User constructor - Initializes a new User instance with the provided properties.
+   * @param {UserConstructorArgs} args - The properties used to create a new user.
+   */
   constructor({
     id = uuid4(),
     username,
@@ -50,28 +76,43 @@ class User implements UserInterface {
     this.updated_at = updated_at;
   }
 
-  // methods
-  to_dict(): string {
-    // creates a copy of user Object and allow for custom properties to be added to the JSON object using Record<string, any>
+  /**
+   * Converts the user object to a dictionary.
+   * @returns {Record<string, any>} A JSON representation of the user object with additional properties (e.g., class_name).
+   */
+  to_dict(): Record<string, any> {
     const to_json: Record<string, any> = { ...this };
 
-    // convert the dates to ISO strings
+    // Convert Date objects to ISO strings
     to_json.created_at = new Date(this.created_at).toISOString();
     to_json.updated_at = new Date(this.updated_at).toISOString();
 
-    // add the class name to the JSON object
+    // Add the class name to the serialized object
     to_json["class_name"] = this.constructor.name;
 
-    return JSON.stringify(to_json, null, 2);
+    return to_json;
+  }
+
+  /**
+   * Saves the user object to a persistent storage.
+   * This method calls the save method of the storage module to persist the user data.
+   */
+  save(): void {
+    // Save the user object to a storage system (e.g., file or database)
+    storage.newObj(this);
+    storage.save();
   }
 }
 
-const user = new User({
+// Example usage:
+const user1 = new User({
   username: "kelly",
 });
 
-user.to_dict();
+// Reloading data from storage and saving the user instance
+storage.reload();
 
+// Creating a second user instance with more properties
 const user2 = new User({
   username: "kelly",
   borrowedBooksCount: 2,
@@ -79,5 +120,8 @@ const user2 = new User({
   borrowedBooks: ["Book1", "Book2"],
 });
 
-// console.log(user);
-// console.log(user2);
+user1.save();
+user2.save()
+
+// exports
+export { User, UserInterface, UserConstructorArgs };

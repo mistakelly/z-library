@@ -139,8 +139,12 @@ const response = {
       avatar: "url",
 
       total_amount: "$12000", // The amount the guest donated in every single gift in an event.
+      // You can see its sorted by the guest who donated the most for an a gift section in an event.
 
       gifts: [
+
+        // Then the individual gift record includes the amount the guest donated.
+        // and its sorted by the highest amount just as in the figma.
         {
           id: "7e73c1f1-9938-4db4-9aef-6fd3d63ef2f8",
           name: "Baby shower"

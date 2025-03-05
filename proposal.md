@@ -61,7 +61,7 @@ const responsse = {
     // second gift record.
     {
       id: "7e73c1f1-9938-4db4-9aef-6fd3d63ef2f8",
-      name: "vacation",
+      name: "Baby Shower",
       total_amount: "$1500", //Total about for this Gift titled "Vacation"
 
       guest: [

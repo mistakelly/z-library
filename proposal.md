@@ -12,7 +12,7 @@
    - The **name** of the Gift.
    - The **total amount contributed** for that Gift.
 
-4. The **Gift objects** is  **sorted** by the highest contribution.
+4. The **Gift objects** is **sorted** by the highest contribution.
 
 ### Nested Guest Information
 
@@ -88,4 +88,25 @@ const responsse = {
     },
   ],
 };
+
+
+//I don't think this current response would work well.
+
+{
+  data: [{
+    guest: {
+      name: string
+      id: string
+      avatar: string
+    },
+    total_amount: string,
+    gifts: [{
+      gift: {
+        name: string
+        id: string
+      },
+      total_amount: string
+    }]
+  }]
+}
 ```
